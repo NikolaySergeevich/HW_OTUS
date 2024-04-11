@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -xeuo pipefail
 
-expected='!SUTO ,olleH'
+expected='!sutO ,olleH'
 result=$(go run main.go | sed 's/^ *//;s/ *$//')
 [ "${result}" = "${expected}" ] || (echo -e "invalid output: ${result}" && exit 1)
 
