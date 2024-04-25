@@ -31,14 +31,14 @@ func Unpack(str string) (string, error) {
 		}
 		if num == 0 {
 			continue
-		} else {
-			for j := 0; j < num-1; j++ {
-				res.WriteRune(strRune[i-1])
-			}
+		}
+		for j := 0; j < num-1; j++ {
+			res.WriteRune(strRune[i-1])
 		}
 	}
 	return res.String(), nil
 }
+
 func checkNextRune(i int, r []rune) bool {
 	if i == len(r)-1 {
 		return true
