@@ -21,7 +21,7 @@ func Unpack(str string) (string, error) {
 	for i, v := range strRune {
 		num, err := strconv.Atoi(string(v))
 		if err != nil {
-			if !checkNextNul(i, strRune){
+			if !checkNextNul(i, strRune) {
 				res.WriteRune(v)
 			}
 			continue
@@ -49,10 +49,10 @@ func checkNextRune(i int, r []rune) bool {
 	return true
 }
 
-func checkNextNul (i int, r []rune) bool {
-	if i == len(r)-1{
+func checkNextNul(i int, r []rune) bool {
+	if i == len(r)-1 {
 		return false
-	} 
+	}
 	if num, err := strconv.Atoi(string(r[i+1])); err == nil && num == 0 {
 		return true
 	}
