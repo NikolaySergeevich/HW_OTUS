@@ -18,15 +18,23 @@ func Unpack(str string) (string, error) {
 	}
 	var res strings.Builder
 
-	for i, v := range strRune {
-		num, err := strconv.Atoi(string(v))
+	for i := 0; i < len(strRune); i ++ {
+		num, err := strconv.Atoi(string(strRune[i]))
 		if err != nil {
+			if strRune[i] == '\\' && checkLastRune(i, strRune) || strRune[i] == '\\' && !checkLastRune(i, strRune) && strRune[i+1] != '\\' && !checkNextRuneInt(i, strRune){
+				return "", ErrInvalidString
+			}
+			if strRune[i] == '\\' && (strRune[i+1] == '\\' || checkNextRuneInt(i, strRune)){
+				i += 1
+				res.WriteRune(strRune[i])
+				continue
+			}
 			if !checkNextNul(i, strRune) {
-				res.WriteRune(v)
+				res.WriteRune(strRune[i])
 			}
 			continue
 		}
-		if !checkNextRune(i, strRune) {
+		if checkNextRuneInt(i, strRune) {
 			return "", ErrInvalidString
 		}
 		if num == 0 {
@@ -39,18 +47,22 @@ func Unpack(str string) (string, error) {
 	return res.String(), nil
 }
 
-func checkNextRune(i int, r []rune) bool {
-	if i == len(r)-1 {
-		return true
-	}
-	if _, err := strconv.Atoi(string(r[i+1])); err == nil {
+func checkNextRuneInt(i int, r []rune) bool {
+	if checkLastRune(i, r) {
 		return false
 	}
-	return true
+	if _, err := strconv.Atoi(string(r[i+1])); err == nil {
+		return true
+	}
+	return false
+}
+
+func checkLastRune(i int, r []rune) bool {
+	return i == len(r)-1
 }
 
 func checkNextNul(i int, r []rune) bool {
-	if i == len(r)-1 {
+	if checkLastRune(i, r) {
 		return false
 	}
 	if num, err := strconv.Atoi(string(r[i+1])); err == nil && num == 0 {
