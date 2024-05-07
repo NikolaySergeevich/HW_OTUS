@@ -1,6 +1,50 @@
 package hw03frequencyanalysis
 
-func Top10(_ string) []string {
-	// Place your code here.
-	return nil
+import (
+	"sort"
+	"strings"
+)
+
+const maxWord = 10
+
+var taskWithAsteriskIsCompleted = false
+
+type kv struct {
+	key   string
+	value int
+}
+
+var sortWord []kv
+
+func Top10(text string) []string {
+	res := make([]string, 0, maxWord)
+	indiv := make(map[string]int)
+	parsText := parsText(taskWithAsteriskIsCompleted, text)
+	for _, v := range parsText {
+		if v == "-" && taskWithAsteriskIsCompleted {
+			continue
+		}
+		indiv[v]++
+	}
+	for k, v := range indiv {
+		sortWord = append(sortWord, kv{k, v})
+	}
+	sort.Slice(sortWord, func(i, j int) bool {
+		if sortWord[i].value == sortWord[j].value {
+			return sortWord[i].key < sortWord[j].key
+		}
+		return sortWord[i].value > sortWord[j].value
+	})
+	for i := 0; i < maxWord && i < len(sortWord); i++ {
+		res = append(res, sortWord[i].key)
+	}
+
+	return res
+}
+
+func parsText(flag bool, text string) []string {
+	if flag {
+		return []string{} //тут доп задание
+	}
+	return strings.Fields(text)
 }
