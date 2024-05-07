@@ -1,11 +1,14 @@
 package hw03frequencyanalysis
 
 import (
+	"regexp"
 	"sort"
 	"strings"
 )
 
 const maxWord = 10
+
+var reg = regexp.MustCompile(`(?:\p{L}+(?:-\p{L}+)*)|(?:\p{L}-\p{L})`)
 
 var taskWithAsteriskIsCompleted = false
 
@@ -21,9 +24,6 @@ func Top10(text string) []string {
 	indiv := make(map[string]int)
 	parsText := parsText(taskWithAsteriskIsCompleted, text)
 	for _, v := range parsText {
-		if v == "-" && taskWithAsteriskIsCompleted {
-			continue
-		}
 		indiv[v]++
 	}
 	for k, v := range indiv {
@@ -44,7 +44,8 @@ func Top10(text string) []string {
 
 func parsText(flag bool, text string) []string {
 	if flag {
-		return []string{} //тут доп задание
+		text = strings.ToLower(text)
+		return reg.FindAllString(text, -1)
 	}
 	return strings.Fields(text)
 }
